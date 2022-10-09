@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <title>Guess the number</title>
+</head>
+<body style="background-color: tomato; font-size: 30px">
+    <div class="container" style="display: flex; flex-direction: column; align-items: center;">
+    <h1>Welcome to the Great Number Game!</h1>
+    <p>I'm thinking of a number between 1 and 100 </p>
+    <p>Your chances: {{request.session.count}}</p>
+    <form action="/number_route" method="post">
+        <input type="text" name="guess">
+        <input type="submit" value="Submit" class="btn btn-primary">
+        {% csrf_token %}
+            {%if 'guess' in request.session %}
+                {% if 'count' in request.session %}
+                {% if 'almost' in request.session %}
+                {% if 'almost1' in request.session %}
+                {% if request.session.count == 0 and request.session.guess == request.session.number %}
+                        <p>Great Job!! &#128518; Got Lucky at your last chances : ) </p>
+                        <!-- <button><a href="/destroy">Play Again</a></button> -->
+                {% endif %}
+                {% if request.session.count == 0 and request.session.guess != request.session.number %}
+                    <p>Sorry, &#128531; you do not have more chances!</p>
+                    <button style="border: solid 5px gray;" class="btn btn-danger"><a href="/destroy" style="text-decoration: none; color: black">Play Again</a></button>
+                {% endif %}
+                    {% if request.session.guess > request.session.number and request.session.guess < request.session.almost%}
+                        <p>You are close, &#128562; a bit lower</p>
+                    {% elif request.session.guess <  request.session.number and request.session.guess > request.session.almost1%}
+                        <p>You are close, &#128535; a bit higher</p>
+                    {% elif request.session.guess > request.session.number %}
+                        <p>Too high! &#128580;</p>
+                    {% elif request.session.guess < request.session.number %}
+                        <p>Too low! &#128580;</p>
+                    {% elif request.session.number == request.session.number %}
+                        <p>Congratulations! &#128512; You have won, the number I was thinking was {{request.session.number}}</p>
+                        <button style="border: solid 5px gray;" class="btn btn-success"><a href="/destroy" style="text-decoration: none; color: black">Play Again</a></button>
+                    {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    </form>
+</div>
+</body>
+</html>
